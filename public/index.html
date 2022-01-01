@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Water Level Indicator</title>
+  </head>
+  <body onload='Populate(0)'>
+    <h2><span id='date-time'></span></h2>
+    <br/>
+    <br/>
+    <button id='refreshBtn' onclick='Refresh()'>Refresh</button>
+    <ul id='list' style='font-size: large;'>
+        <li id='7'>FULL !!</li>
+        <li id='6'>80%</li>
+        <li id='5'>60%</li>
+        <li id='4'>50%</li>
+        <li id='3'>30%</li>
+        <li id='2'>15%</li>
+        <li id='1'>EMPTY !!</li>
+    </ul>
+    <h3 id='err'>Something went wrong !!! please try again after some time..</h3>
+  </body>
+  <script>
+    function showError()
+    {
+        document.getElementById('list').style = 'visibility: hidden;';
+        document.getElementById('err').style = 'visibility: visible;color: red';
+        var refreshBtn = document.getElementById('refreshBtn');
+        refreshBtn.disabled = false;
+        refreshBtn.innerHTML = 'Refresh';
+    }
+    function Populate(level)
+    {
+        document.getElementById('date-time').innerHTML=new Date().toLocaleString();
+        document.getElementById('list').style = 'visibility: visible;';
+        document.getElementById('err').style = 'visibility: hidden;';
+        document.getElementById('1').innerHTML = 'EMPTY !!';
+        document.getElementById('2').innerHTML = '15%';
+        document.getElementById('3').innerHTML = '30%';
+        document.getElementById('4').innerHTML = '50%';
+        document.getElementById('5').innerHTML = '60%';
+        document.getElementById('6').innerHTML = '80%';
+        document.getElementById('7').innerHTML = 'FULL !!';
+        document.getElementById('1').style = '';
+        document.getElementById('2').style = '';
+        document.getElementById('3').style = '';
+        document.getElementById('4').style = '';
+        document.getElementById('5').style = '';
+        document.getElementById('6').style = '';
+        document.getElementById('7').style = '';
+        if(level != '0')
+        {
+            var element = document.getElementById(level)
+            element.innerHTML += '<<<-----------<';
+            if (level == '1' || level == '7')
+                element.style = 'font-weight: bold;color: red;';
+            else
+            element.style = 'font-weight: bold;color: blue;';
+        }
+        var refreshBtn = document.getElementById('refreshBtn');
+        refreshBtn.disabled = false;
+        refreshBtn.innerHTML = 'Refresh';
+    }
+    function Refresh()
+    {
+        var refreshBtn = document.getElementById('refreshBtn');
+        refreshBtn.disabled = true;
+        refreshBtn.innerHTML = 'Refreshing...';
+        const request = (async () => {
+            try
+            {
+                const response = await fetch('https://api.allorigins.win/raw?url=http://devansh.ddns.net/getLevel');
+                const level = await response.text();
+                if (parseInt(level) > 0 && parseInt(level) < 8)
+                    Populate(level);
+                else
+                {
+                    console.log('API returned level : ' + level);
+                    showError();
+                }
+            }
+            catch(err)
+            {
+                console.log(err);
+                showError();
+            }
+        }).call();
+    }
+  </script>
+</html>
