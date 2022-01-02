@@ -1,13 +1,14 @@
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
- 
-// network credentials
+
+// Replace with network credentials
 const char* ssid     = "__WIFI_SSID__";
 const char* password = "__WIFI_PASSWORD__";
  
 ESP8266WebServer server(8082);   //instantiate server at port 8082
 
+// Initializing Pin names
 int pin_D8 = 15;
 int pin_D0 = 16;
 int pin_D1 = 5;
@@ -20,9 +21,11 @@ String page = "";
 
 void setup(void){
   delay(1000);
+  
   Serial.begin(115200);
   Serial.println("\nnodeMcu Started ......");
   Serial.println("Setting up Pins..");
+  
   pinMode(pin_D8, OUTPUT);
   pinMode(pin_D0, INPUT);
   pinMode(pin_D1, INPUT);
